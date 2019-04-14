@@ -1,0 +1,14 @@
+{
+  "authenticationMethod": "none",
+  "routes": [{
+  "source": "(.*)(.xsjs)",
+  "destination": "servr-xsjs-backend",
+  "csrfProtection": false,
+  "authenticationType": "xsuaa"
+}, {
+  "source": "(.*)(.xsodata)",
+  "destination": "servr-xsjs-backend",
+  "authenticationType": "xsuaa"
+
+}]	
+}

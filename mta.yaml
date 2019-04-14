@@ -1,0 +1,64 @@
+ID: Deivid
+_schema-version: '2.1'
+parameters:
+  deploy_mode: html5-repo
+version: 0.0.1
+modules:
+  - name: Deivid_appRouter
+    type: approuter.nodejs
+    path: Deivid_appRouter
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: Deivid_html5_repo_runtime
+      - name: servr_api
+        group: destinations
+        properties:
+          name: servr-xsjs-backend
+          url: '~{url}'
+          forwardAuthToken: 'true '
+  - name: Deivid_ui_deployer
+    type: com.sap.html5.application-content
+    path: Deivid_ui_deployer
+    requires:
+      - name: Deivid_html5_repo_host
+      - name: servr_api
+        properties:
+          name: servr-xsjs-backend
+          url: '~{url}'
+          forwardAuthToken: true
+        group: destinations
+  - name: db
+    type: hdb
+    path: db
+    requires:
+      - name: hdi_db
+  - name: servr
+    type: nodejs
+    path: servr
+    provides:
+      - name: servr_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: hdi_db
+      - name: db
+resources:
+  - name: Deivid_html5_repo_runtime
+    parameters:
+      service-plan: app-runtime
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: Deivid_html5_repo_host
+    parameters:
+      service-plan: app-host
+      service: html5-apps-repo
+    type: org.cloudfoundry.managed-service
+  - name: hdi_db
+    parameters:
+      config:
+        schema: david
+    properties:
+      hdi-container-name: '${service-name}'
+    type: com.sap.xs.hdi-container
